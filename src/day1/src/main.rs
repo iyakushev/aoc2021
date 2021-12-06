@@ -29,10 +29,28 @@ fn scan_depth(mut it: Lines<BufReader<File>>) -> u32 {
     total_incr
 }
 
+fn scan_depth_window(mut it: Lines<BufReader<File>>, window_size: usize) -> u32 {
+    let it = it
+        .map(|read| read.unwrap().parse::<i32>().unwrap())
+        .collect::<Vec<i32>>();
+    let mut total_incr = 0u32;
+    let mut lines = it.windows(window_size);
+    let mut value = lines.next().unwrap().iter().sum::<i32>();
+    for tup_values in lines {
+        let tmp = tup_values.iter().sum();
+        total_incr += (((value - tmp) as u32) >> 31) & 0x1;
+        value = tmp
+    }
+    total_incr
+}
+
 fn main() {
     println!("Hello, #AOC2021 Day1");
     let result = scan_depth(depth_iter(Path::new("../input.txt")).unwrap());
     println!("Total increases: {}", result);
+
+    let result = scan_depth_window(depth_iter(Path::new("../input.txt")).unwrap(), 3);
+    println!("Total increases with window<3>: {}", result);
 }
 
 #[cfg(test)]
