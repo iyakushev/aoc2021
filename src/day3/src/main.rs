@@ -1,7 +1,6 @@
 use std::{
     fs::File,
     io::{self, BufRead, BufReader, Lines},
-    ops::Div,
     path::Path,
 };
 
